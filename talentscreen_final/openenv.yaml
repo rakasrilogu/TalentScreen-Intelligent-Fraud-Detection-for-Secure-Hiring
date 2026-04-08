@@ -1,0 +1,49 @@
+name: talentscreen
+version: "1.0.0"
+description: >
+  TalentScreen is a hiring pipeline fraud detection environment.
+  An AI agent receives a structured synthetic candidate profile and must
+  identify fraudulent fields, assign reason codes, and make a hiring
+  decision. Graded deterministically against a pre-planted ground truth.
+
+author: "TalentScreen Team"
+license: MIT
+
+environment:
+  entry_point: "talentscreen.env:TalentScreenEnv"
+  observation_type: "talentscreen.models:Observation"
+  action_type:      "talentscreen.models:Action"
+  reward_type:      "talentscreen.models:Reward"
+
+tasks:
+  - id: easy
+    description: "Single timeline conflict — candidate started work before graduation"
+    difficulty: easy
+    max_steps: 5
+    reward_threshold: 0.7
+
+  - id: medium
+    description: "3 subtle inconsistencies — GPA violation, title inflation, skill gap"
+    difficulty: medium
+    max_steps: 5
+    reward_threshold: 0.5
+
+  - id: hard
+    description: "5 layered fraud flags — requires cross-referencing 12 profile fields"
+    difficulty: hard
+    max_steps: 5
+    reward_threshold: 0.3
+
+endpoints:
+  reset: "POST /reset"
+  step:  "POST /step"
+  state: "GET /state"
+
+tags:
+  - hiring
+  - fraud-detection
+  - hr-ai
+  - structured-reasoning
+  - openenv
+
+trajectory: true
