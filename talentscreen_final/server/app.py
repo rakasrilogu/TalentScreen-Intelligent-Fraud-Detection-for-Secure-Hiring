@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from talentscreen.env import TalentScreenEnv
 from talentscreen.models import Action
+import uvicorn
 
 app = FastAPI()
 
@@ -20,7 +21,6 @@ def reset(task_id: str):
 def step(task_id: str, action: Action):
     env = _envs[task_id]
     obs, reward, done, info = env.step(action)
-
     return {
         "observation": obs.dict(),
         "reward": reward.value if hasattr(reward, "value") else reward,
@@ -31,3 +31,9 @@ def step(task_id: str, action: Action):
 @app.get("/state")
 def state(task_id: str):
     return {"state": _envs[task_id].get_state()}
+
+def main():
+    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+if __name__ == "__main__":
+    main()
